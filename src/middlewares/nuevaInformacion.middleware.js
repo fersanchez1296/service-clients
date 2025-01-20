@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+import Dependencia from "../models/dependencia.model.js"
+import Secretaria from "../models/secretaria.model.js"
+import Direccion_area from "../models/direccion_area.model.js"
+import Direccion_general from "../models/direccion_general.model.js"
 import * as Models from "../models/index.js";
 
 export const nuevaInformacion = async (req, res, next) => {
@@ -13,16 +17,17 @@ export const nuevaInformacion = async (req, res, next) => {
   try {
     if (nuevaDependencia) {
       console.log("Agregando nuevaDependencia:", nuevaDependencia);
-      const nuevoDependencia = await Models.dependenciaModel.create(
+      const nuevoDependencia = await Dependencia.create(
         [{ Dependencia: nuevaDependencia }],
         { session }
       );
+      console.log("idDependencia",nuevoDependencia)
       req.body.Dependencia = nuevoDependencia[0]._id;
     }
 
     if (nuevaSecretaria) {
       console.log("Agregando nueva secretaria:", nuevaSecretaria);
-      const nuevoSecretaria = await Models.secretariaModel.create(
+      const nuevoSecretaria = await Secretaria.create(
         [{ Secretaria: nuevaSecretaria }],
         { session }
       );
@@ -31,7 +36,7 @@ export const nuevaInformacion = async (req, res, next) => {
 
     if (nuevaDArea) {
       console.log("Agregando nuevaDArea:", nuevaDArea);
-      const nuevoDArea = await Models.direccion_areaModel.create(
+      const nuevoDArea = await Direccion_area.create(
         [{ direccion_area: nuevaDArea }],
         { session }
       );
@@ -40,7 +45,7 @@ export const nuevaInformacion = async (req, res, next) => {
 
     if (nuevaDGeneral) {
       console.log("Agregando nuevaDGeneral:", nuevaDGeneral);
-      const nuevoDGeneral = await Models.direccion_generalModel.create(
+      const nuevoDGeneral = await Direccion_general.create(
         [{ Direccion_General: nuevaDGeneral }],
         { session }
       );
@@ -48,6 +53,7 @@ export const nuevaInformacion = async (req, res, next) => {
     }
     next();
   } catch (error) {
+    console.log(error);
     await session.abortTransaction();
     session.endSession();
     res.status(500).json({ desc: "Error al procesar la información nueva" });

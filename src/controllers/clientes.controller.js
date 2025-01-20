@@ -46,9 +46,9 @@ export const obtenerClientes = async (req, res, next) => {
 export const actualizarCliente = async (req, res) => {
   const clientId = req.params.id;
   const cliente = req.body;
-  const session = await mongoose.startSession();
-  session.startTransaction();
+  const session = req.session;
   try {
+    console.log("Cliente antes de llegar al repositorio", cliente);
     const result = await updateCliente(cliente, clientId, session);
     await session.commitTransaction();
     session.endSession();
@@ -59,6 +59,7 @@ export const actualizarCliente = async (req, res) => {
     }
     return res.status(200).json({ desc: "Cliente actualizado con exito" });
   } catch (error) {
+    console.log(error)
     if (session) {
       await session.abortTransaction();
       session.endSession();

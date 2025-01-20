@@ -33,17 +33,21 @@ export const getClientes = async () => {
 
 export const updateCliente = async (cliente, clienteId, session) => {
   try {
+    console.log("cliente antes de guardar", cliente);
     const RES = await Clientes.findOneAndUpdate(
       { _id: clienteId },
       { $set: { ...cliente } },
-      { session }
+      { session, new: true}
     );
-    console.log(RES);
+    console.log("Cliente despues de guardar", RES);
     if (RES.modifiedCount === 0) {
       return false;
     }
     return RES;
   } catch (error) {
+    console.log(error);
+    await session.abortTransaction();
+    session.endSession();
     return false;
   }
 };
@@ -56,7 +60,6 @@ export const getSelectData = async () => {
       Direccion_area.find(),
       Direccion_general.find(),
     ]);
-    console.log(secretarias);
     if (!secretarias || !dependencias || !dareas || !dgenerales) {
       return false;
     }
@@ -71,7 +74,7 @@ export const getSelectData = async () => {
   }
 };
 
-export const buscarClientePorCorreo = async (correo) => {
+export const buscarClientePorCorreo = async (correo, session) => {
   try {
     const result = await Clientes.findOne({ Correo: correo });
     if (!result) {

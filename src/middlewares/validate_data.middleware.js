@@ -14,6 +14,10 @@ export const validateData = (schemaName) => {
     if (req.body.Dependencia && typeof req.body.Dependencia === 'object') {
       req.body.Dependencia = req.body.Dependencia.toString();
     }
+    delete req.body.isEdit;
+    delete req.body._id;
+    delete req.body.id;
+    delete req.body.secretarioNombre;
     const schema = Schemas[`${schemaName}Schema`];
     if (!schema) {
       return res.status(400).json({ error: "Nombre de Esquema inválido" });

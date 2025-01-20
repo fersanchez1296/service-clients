@@ -40,6 +40,7 @@ router.put(
   "/clients/:id",
   verifyToken,
   verifyRole("Root"),
+  nuevaInformacion,
   validateData("clientes"),
   actualizarCliente,
 );
