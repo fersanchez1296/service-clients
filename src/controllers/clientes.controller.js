@@ -15,7 +15,9 @@ export const register = async (req, res) => {
     await session.commitTransaction();
     session.endSession();
     if (nuevoCliente) {
-      res.status(200).json({ desc: "Cliente Registrado Correctamente" });
+      res
+        .status(200)
+        .json({ status: 200, desc: "Cliente Registrado Correctamente" });
     } else {
       res
         .status(500)
@@ -59,7 +61,7 @@ export const actualizarCliente = async (req, res) => {
     }
     return res.status(200).json({ desc: "Cliente actualizado con exito" });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     if (session) {
       await session.abortTransaction();
       session.endSession();
