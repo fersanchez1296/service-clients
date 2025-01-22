@@ -5,7 +5,6 @@ export const populateClientes = async (req, res) => {
       { path: "Dependencia", select: "Dependencia _id" },
       { path: "direccion_area", select: "direccion_area _id" },
       { path: "Direccion_General", select: "Direccion_General _id" },
-      { path: "Secretaria", select: "Secretaria _id" },
     ]);
     if (!POPULATE) {
       return res.status(500).json({ desc: "Error al procesar los clientes." });

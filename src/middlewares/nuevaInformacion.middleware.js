@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import Dependencia from "../models/dependencia.model.js"
-import Secretaria from "../models/secretaria.model.js"
 import Direccion_area from "../models/direccion_area.model.js"
 import Direccion_general from "../models/direccion_general.model.js"
 import * as Models from "../models/index.js";
@@ -10,7 +9,6 @@ export const nuevaInformacion = async (req, res, next) => {
   session.startTransaction();
   req.session = session;
   const nuevaDependencia = req.body.nuevaDependencia;
-  const nuevaSecretaria = req.body.nuevaSecretaria;
   const nuevaDArea = req.body.nuevaDArea;
   const nuevaDGeneral = req.body.nuevaDGeneral;
 
@@ -23,15 +21,6 @@ export const nuevaInformacion = async (req, res, next) => {
       );
       console.log("idDependencia",nuevoDependencia)
       req.body.Dependencia = nuevoDependencia[0]._id;
-    }
-
-    if (nuevaSecretaria) {
-      console.log("Agregando nueva secretaria:", nuevaSecretaria);
-      const nuevoSecretaria = await Secretaria.create(
-        [{ Secretaria: nuevaSecretaria }],
-        { session }
-      );
-      req.body.Secretaria = nuevoSecretaria[0]._id;
     }
 
     if (nuevaDArea) {
