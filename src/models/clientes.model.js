@@ -12,12 +12,6 @@ const clientesModel = mongoose.Schema(
       trim: true,
       required: true,
     },
-    Secretaria: {
-      type: Schema.Types.ObjectId,
-      ref: "Secretaria",
-      trim: true,
-      required: true,
-    },
     Dependencia: {
       type: Schema.Types.ObjectId,
       ref: "Dependencia",
