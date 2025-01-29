@@ -12,11 +12,12 @@ export const verifyClientExists = async (req, res, next) => {
       Correo,
     });
     if (result.length === 0) {
-      next();
+      return next();
     } else {
-      return res.status(409).json({ desc: "El cliente ya existe" });
+      return res.status(409).json({ desc: "El cliente con este correo ya existe" });
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).json({desc : "Error interno en el servidor. Intente mas tarde"});
   }
 };
