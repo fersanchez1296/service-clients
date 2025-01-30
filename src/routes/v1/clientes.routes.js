@@ -17,7 +17,7 @@ const router = Router();
 router.post(
   "/clients",
   verifyToken,
-  verifyRole("Root"),
+  verifyRole(["Root", "Administrador"]),
   verifyClientExists,
   nuevaInformacion,
   validateData("clientes"),
@@ -26,20 +26,20 @@ router.post(
 router.get(
   "/clients",
   verifyToken,
-  verifyRole("Root"),
+  verifyRole(["Root", "Administrador"]),
   obtenerClientes,
   populateClientes
 );
 router.get(
   "/clients/selectData",
   verifyToken,
-  verifyRole("Root"),
+  verifyRole(["Root", "Administrador"]),
   obtenerSelectData,
 );
 router.put(
   "/clients/:id",
   verifyToken,
-  verifyRole("Root"),
+  verifyRole(["Root", "Administrador"]),
   nuevaInformacion,
   validateData("clientes"),
   actualizarCliente,
@@ -48,7 +48,7 @@ router.put(
 router.get(
   "/clients/:correo",
   verifyToken,
-  verifyRole("Root"),
+  verifyRole(["Root", "Administrador"]),
   obtenerCliente,
   populateClientes
 );
