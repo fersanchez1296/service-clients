@@ -37,7 +37,6 @@ const clientesModel = mongoose.Schema(
     Extension: {
       type: String,
       trim: true,
-      required: true,
     },
     Ubicacion: {
       type: String,

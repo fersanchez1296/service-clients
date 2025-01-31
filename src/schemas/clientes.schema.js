@@ -6,7 +6,7 @@ export const clientesSchema = Joi.object({
   direccion_area: Joi.string().length(24).hex().required(),
   Dependencia: Joi.string().length(24).hex().required(),
   Telefono: Joi.number().required(),
-  Extension: Joi.number().required(),
+  Extension: Joi.number().allow(""),
   Ubicacion: Joi.string().required(),
   nuevaDependencia: Joi.string().allow(''),
   nuevaDArea: Joi.string().allow(''),
