@@ -14,12 +14,18 @@ export const validateData = (schemaName) => {
     delete req.body.isEdit;
     delete req.body._id;
     delete req.body.id;
+    delete req.body.__v;
+    delete req.body.Telext;
+    delete req.body.direccionAreaNombre;
+    delete req.body.dependenciaNombre;
+    delete req.body.direccionGeneralNombre;
     const schema = Schemas[`${schemaName}Schema`];
     if (!schema) {
       return res.status(400).json({ error: "Nombre de Esquema inválido" });
     }
     const { error } = schema.validate(req.body);
     if (error) {
+      console.log(error);
       return res
         .status(400)
         .json({ error: error.details?.[0]?.message || "Error de validacion" });

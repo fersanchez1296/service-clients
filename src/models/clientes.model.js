@@ -22,7 +22,6 @@ const clientesModel = mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "Direccion_general",
       trim: true,
-      required: true,
     },
     direccion_area: {
       type: Schema.Types.ObjectId,
