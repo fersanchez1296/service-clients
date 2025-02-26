@@ -12,6 +12,9 @@ import { verifyRole } from "../../middlewares/verify_role.middleware.js";
 import { verifyClientExists } from "../../middlewares/verifyClientExists.middleware.js";
 import { populateClientes } from "../../middlewares/populateClientes.middleware.js";
 import { nuevaInformacion } from "../../middlewares/nuevaInformacion.middleware.js";
+import { startTransaction } from "../../middlewares/startTransaction.middleware.js";
+import { endTransaction } from "../../middlewares/endTransaction.middleware.js";
+import { genericResponse } from "../../middlewares/genericResponse.middleware.js";
 const router = Router();
 
 router.post(
@@ -19,9 +22,11 @@ router.post(
   verifyToken,
   verifyRole(["Root", "Administrador"]),
   verifyClientExists,
+  startTransaction,
   nuevaInformacion,
-  validateData("clientes"),
-  register
+  register,
+  endTransaction,
+  genericResponse
 );
 router.get(
   "/clients",
@@ -34,15 +39,17 @@ router.get(
   "/clients/selectData",
   verifyToken,
   verifyRole(["Root", "Administrador"]),
-  obtenerSelectData,
+  obtenerSelectData
 );
 router.put(
   "/clients/:id",
   verifyToken,
   verifyRole(["Root", "Administrador"]),
+  startTransaction,
   nuevaInformacion,
-  validateData("clientes"),
   actualizarCliente,
+  endTransaction,
+  genericResponse
 );
 
 router.get(

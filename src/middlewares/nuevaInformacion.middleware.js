@@ -1,50 +1,71 @@
 import mongoose from "mongoose";
-import Dependencia from "../models/dependencia.model.js"
-import Direccion_area from "../models/direccion_area.model.js"
-import Direccion_general from "../models/direccion_general.model.js"
-import * as Models from "../models/index.js";
+import Dependencia from "../models/dependencia.model.js";
+import Direccion_area from "../models/direccion_area.model.js";
+import Direccion_general from "../models/direccion_general.model.js";
 
 export const nuevaInformacion = async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  req.session = session;
-  const nuevaDependencia = req.body.nuevaDependencia;
-  const nuevaDArea = req.body.nuevaDArea;
-  const nuevaDGeneral = req.body.nuevaDGeneral;
-
+  const session = req.mongoSession;
   try {
+    if (
+      !req.body.nuevaDependencia &&
+      !req.body.nuevaDArea &&
+      !req.body.nuevaDGeneral
+    ) {
+      return next();
+    }
+
+    const nuevaDependencia = req.body.nuevaDependencia || null;
+    const nuevaDArea = req.body.nuevaDArea || null;
+    const nuevaDGeneral = req.body.nuevaDGeneral || null;
+
     if (nuevaDependencia) {
-      console.log("Agregando nuevaDependencia:", nuevaDependencia);
-      const nuevoDependencia = await Dependencia.create(
-        [{ Dependencia: nuevaDependencia }],
-        { session }
-      );
-      console.log("idDependencia",nuevoDependencia)
-      req.body.Dependencia = nuevoDependencia[0]._id;
+      const nuevoDependencia = new Dependencia({
+        Dependencia: nuevaDependencia,
+      });
+      const result = await nuevoDependencia.save({ session });
+      if (!result) {
+        await session.abortTransaction();
+        session.endSession();
+        return res
+          .status(500)
+          .json({ desc: "Error al guardar la nueva dependencia" });
+      }
+      req.body.Dependencia = nuevoDependencia._id;
     }
 
     if (nuevaDArea) {
-      console.log("Agregando nuevaDArea:", nuevaDArea);
-      const nuevoDArea = await Direccion_area.create(
-        [{ direccion_area: nuevaDArea }],
-        { session }
-      );
-      req.body.direccion_area = nuevoDArea[0]._id;
+      const nuevoDArea = new Direccion_area({ direccion_area: nuevaDArea });
+      const result = await nuevoDArea.save({ session });
+      if (!result) {
+        await session.abortTransaction();
+        session.endSession();
+        return res
+          .status(500)
+          .json({ desc: "Error al aguardar la nueva dirección de área" });
+      }
+      console.log(result);
+      req.body.direccion_area = nuevoDArea._id;
     }
 
     if (nuevaDGeneral) {
-      console.log("Agregando nuevaDGeneral:", nuevaDGeneral);
-      const nuevoDGeneral = await Direccion_general.create(
-        [{ Direccion_General: nuevaDGeneral }],
-        { session }
-      );
-      req.body.Direccion_General = nuevoDGeneral[0]._id;
+      const nuevoDGeneral = new Direccion_general({
+        Direccion_General: nuevaDGeneral,
+      });
+      const result = await nuevoDGeneral.save({ session });
+      if (!result) {
+        await session.abortTransaction();
+        session.endSession();
+        return res
+          .status(500)
+          .json({ desc: "Error al a=guardar la nueva dirección general" });
+      }
+      req.body.Direccion_General = nuevoDGeneral._id;
     }
-    next();
+    return next();
   } catch (error) {
-    console.log(error);
+    console.error("Error al guardar cliente:", error);
     await session.abortTransaction();
     session.endSession();
-    res.status(500).json({ desc: "Error al procesar la información nueva" });
+    res.status(500).json({ desc: "Error al guardar el cliente" });
   }
 };

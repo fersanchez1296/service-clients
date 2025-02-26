@@ -5,15 +5,15 @@ import Direccion_general from "../models/direccion_general.model.js";
 import Direccion_area from "../models/direccion_area.model.js";
 export const postRegistrarCliente = async (cliente, session) => {
   try {
-    const RES = await Clientes.create([{ ...cliente }], { session });
-    if (!RES) {
+    const newCliente = new Clientes({
+      ...cliente,
+    });
+    const result = await newCliente.save({ session });
+    if (!result) {
       return false;
     }
-    return RES;
+    return result;
   } catch (error) {
-    console.log(error);
-    await session.abortTransaction();
-    session.endSession();
     return false;
   }
 };
@@ -32,21 +32,16 @@ export const getClientes = async () => {
 
 export const updateCliente = async (cliente, clienteId, session) => {
   try {
-    console.log("cliente antes de guardar", cliente);
     const RES = await Clientes.findOneAndUpdate(
       { _id: clienteId },
       { $set: { ...cliente } },
-      { session, new: true }
+      { session }
     );
-    console.log("Cliente despues de guardar", RES);
     if (RES.modifiedCount === 0) {
       return false;
     }
     return RES;
   } catch (error) {
-    console.log(error);
-    await session.abortTransaction();
-    session.endSession();
     return false;
   }
 };

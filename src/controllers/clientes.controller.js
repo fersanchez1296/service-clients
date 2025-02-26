@@ -5,30 +5,26 @@ import {
   getSelectData,
   buscarClientePorCorreo,
 } from "../repository/index.repository.js";
-import mongoose from "mongoose";
 
-export const register = async (req, res) => {
-  const session = req.session;
-  const cliente = req.body;
+export const register = async (req, res, next) => {
+  const session = req.mongoSession;
   try {
+    const cliente = req.body;
     const nuevoCliente = await postRegistrarCliente(cliente, session);
-    await session.commitTransaction();
-    session.endSession();
-    if (nuevoCliente) {
-      res
-        .status(200)
-        .json({ status: 200, desc: "Cliente Registrado Correctamente" });
-    } else {
-      res
+    if (!nuevoCliente) {
+      await session.abortTransaction();
+      session.endSession();
+      return res
         .status(500)
-        .json({ desc: "Error al registrar al cliente. Inténtalo más tarde" });
+        .json({ desc: "Ocurrió un error al registrar el clinte" });
     }
+    return next();
   } catch (error) {
     if (session) {
       await session.abortTransaction();
       session.endSession();
     }
-    res.status(500).json({ desc: "Error interno en el servidor" });
+    return res.status(500).json({ desc: "Error interno en el servidor" });
   }
 };
 
@@ -45,27 +41,23 @@ export const obtenerClientes = async (req, res, next) => {
   }
 };
 
-export const actualizarCliente = async (req, res) => {
-  const clientId = req.params.id;
-  const cliente = req.body;
-  const session = req.session;
+export const actualizarCliente = async (req, res, next) => {
+  const session = req.mongoSession;
   try {
-    console.log("Cliente antes de llegar al repositorio", cliente);
+    const clientId = req.params.id;
+    const cliente = req.body;
     const result = await updateCliente(cliente, clientId, session);
-    await session.commitTransaction();
-    session.endSession();
     if (!result) {
+      await session.abortTransaction();
+      session.endSession();
       return res.status(400).json({
         desc: "Ocurrio un error al actualizar el cliente",
       });
     }
-    return res.status(200).json({ desc: "Cliente actualizado con exito" });
+    return next();
   } catch (error) {
-    console.log(error);
-    if (session) {
-      await session.abortTransaction();
-      session.endSession();
-    }
+    await session.abortTransaction();
+    session.endSession();
     return res.status(500).json({ desc: "Error interno en el servidor" });
   }
 };
