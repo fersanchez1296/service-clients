@@ -6,18 +6,23 @@ export const verifyClientExists = async (req, res, next) => {
       .status(400)
       .json({ desc: "No se proporciono un parametro de busqueda" });
   }
-  const { Correo } = req.body;
+  const { Correo, Nombre } = req.body;
+  console.log(Correo, Nombre);
   try {
-    const result = await Models.clientesModel.find({
-      Correo,
+    const result = await Models.clientesModel.findOne({
+      $or: [{ Correo }, { Nombre }],
     });
-    if (result.length === 0) {
+    if (!result) {
       return next();
     } else {
-      return res.status(409).json({ desc: "El cliente con este correo ya existe" });
+      return res
+        .status(409)
+        .json({ desc: "El cliente con este nombre o este correo ya existe" });
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).json({desc : "Error interno en el servidor. Intente mas tarde"});
+    return res
+      .status(500)
+      .json({ desc: "Error interno en el servidor. Intente mas tarde" });
   }
 };

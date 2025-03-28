@@ -66,9 +66,46 @@ export const getSelectData = async () => {
   }
 };
 
-export const buscarClientePorCorreo = async (correo, session) => {
+export const buscarClientePorCorreo = async (data, session) => {
   try {
-    const result = await Clientes.findOne({ Correo: correo });
+    const result = await Clientes.findOne({
+      $or: [{ Correo: data }, { Nombre: data }],
+    });
+    if (!result) {
+      return false;
+    }
+    return result;
+  } catch (error) {
+    return false;
+  }
+};
+export const buscarClientePorNombre = async (data) => {
+  try {
+    const result = await Clientes.findOne({ Nombre: data });
+    if (!result) {
+      return false;
+    }
+    return result;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const verifyDireccionAreaExists = async (data) => {
+  try {
+    const result = await Direccion_area.findOne({ direccion_area: data });
+    if (!result) {
+      return false;
+    }
+    return result;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const verifyDireccionGeneralExists = async (data) => {
+  try {
+    const result = await Direccion_general.findOne({ Direccion_general: data });
     if (!result) {
       return false;
     }

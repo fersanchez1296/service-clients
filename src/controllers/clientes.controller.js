@@ -4,6 +4,7 @@ import {
   updateCliente,
   getSelectData,
   buscarClientePorCorreo,
+  buscarClientePorNombre,
 } from "../repository/index.repository.js";
 
 export const register = async (req, res, next) => {
@@ -16,8 +17,9 @@ export const register = async (req, res, next) => {
       session.endSession();
       return res
         .status(500)
-        .json({ desc: "Ocurrió un error al registrar el clinte" });
+        .json({ desc: "Ocurrió un error al registrar el cliente" });
     }
+    req.idCliente = nuevoCliente._id;
     return next();
   } catch (error) {
     if (session) {
@@ -77,14 +79,16 @@ export const obtenerSelectData = async (req, res) => {
 };
 
 export const obtenerCliente = async (req, res, next) => {
-  const correo = req.params.correo;
+  const data = req.params.correo;
   try {
-    const result = await buscarClientePorCorreo(correo);
+    const result = await buscarClientePorCorreo(data);
     if (!result) {
-      return res.status(404).json({ status: 404 });
+      return res
+        .status(404)
+        .json({ desc: "No se entrontro este cliente en la base de datos." });
     }
     req.clientesFormateados = result;
-    next();
+    return next();
   } catch (error) {
     return res.status(500).json({ desc: "Error interno en el servidor" });
   }
