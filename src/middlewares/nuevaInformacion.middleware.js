@@ -62,7 +62,7 @@ export const nuevaInformacion = async (req, res, next) => {
     }
     return next();
   } catch (error) {
-    console.error("Error al guardar cliente:", error);
+    console.log("Error al guardar cliente");
     await session.abortTransaction();
     session.endSession();
     res.status(500).json({ desc: "Error al guardar el cliente" });

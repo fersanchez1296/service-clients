@@ -21,14 +21,13 @@ export const validateData = (schemaName) => {
     delete req.body.direccionGeneralNombre;
     const schema = Schemas[`${schemaName}Schema`];
     if (!schema) {
-      return res.status(400).json({ error: "Nombre de Esquema inválido" });
+      return res.status(400).json({ desc: "Nombre de Esquema inválido" });
     }
     const { error } = schema.validate(req.body);
     if (error) {
-      console.log(error);
       return res
         .status(400)
-        .json({ error: error.details?.[0]?.message || "Error de validacion" });
+        .json({ desc: "Error de validacion" });
     }
     next();
   };
