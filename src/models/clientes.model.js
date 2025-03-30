@@ -16,7 +16,7 @@ const clientesModel = mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "Dependencia",
       trim: true,
-      
+      default: new mongoose.Types.ObjectId("679b8a12c9c34d1de358f1cd"), //esto no tiene porque estar quemado
     },
     Direccion_General: {
       type: Schema.Types.ObjectId,
