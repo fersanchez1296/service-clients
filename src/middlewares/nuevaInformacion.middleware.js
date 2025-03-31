@@ -28,12 +28,12 @@ export const nuevaInformacion = async (req, res, next) => {
             .json({ desc: "Error al guardar la nueva dirección de área" });
         }
         req.body.direccion_area = nuevoDArea._id;
-      } else {
-        await session.abortTransaction();
-        session.endSession();
-        return res
-          .status(409)
-          .json({ desc: "Esta dirección de área ya existe." });
+      // } else {
+      //   await session.abortTransaction();
+      //   session.endSession();
+      //   return res
+      //     .status(409)
+      //     .json({ desc: "Esta dirección de área ya existe." });
       // }
     }
 
@@ -52,12 +52,12 @@ export const nuevaInformacion = async (req, res, next) => {
             .json({ desc: "Error al guardar la nueva dirección general" });
         }
         req.body.Direccion_General = nuevoDGeneral._id;
-      } else {
-        await session.abortTransaction();
-        session.endSession();
-        return res
-          .status(409)
-          .json({ desc: "Esta dirección general ya existe." });
+      // } else {
+      //   await session.abortTransaction();
+      //   session.endSession();
+      //   return res
+      //     .status(409)
+      //     .json({ desc: "Esta dirección general ya existe." });
       // }
     }
     return next();
