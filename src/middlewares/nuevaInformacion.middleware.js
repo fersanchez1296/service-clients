@@ -16,8 +16,8 @@ export const nuevaInformacion = async (req, res, next) => {
     const nuevaDGeneral = req.body.nuevaDGeneral || null;
 
     if (nuevaDArea) {
-      const exist = verifyDireccionAreaExists(nuevaDArea);
-      if (!exist) {
+      // const exist = verifyDireccionAreaExists(nuevaDArea);
+      // if (!exist) {
         const nuevoDArea = new Direccion_area({ direccion_area: nuevaDArea });
         const result = await nuevoDArea.save({ session });
         if (!result) {
@@ -34,12 +34,12 @@ export const nuevaInformacion = async (req, res, next) => {
         return res
           .status(409)
           .json({ desc: "Esta dirección de área ya existe." });
-      }
+      // }
     }
 
     if (nuevaDGeneral) {
-      const exist = verifyDireccionGeneralExists(nuevaDArea);
-      if (!exist) {
+      // const exist = verifyDireccionGeneralExists(nuevaDArea);
+      // if (!exist) {
         const nuevoDGeneral = new Direccion_general({
           Direccion_General: nuevaDGeneral,
         });
@@ -58,7 +58,7 @@ export const nuevaInformacion = async (req, res, next) => {
         return res
           .status(409)
           .json({ desc: "Esta dirección general ya existe." });
-      }
+      // }
     }
     return next();
   } catch (error) {
