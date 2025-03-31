@@ -16,8 +16,10 @@ export const nuevaInformacion = async (req, res, next) => {
     const nuevaDGeneral = req.body.nuevaDGeneral || null;
 
     if (nuevaDArea) {
-      // const exist = verifyDireccionAreaExists(nuevaDArea);
-      // if (!exist) {
+      const exist = await verifyDireccionAreaExists(nuevaDArea);
+      console.log(nuevaDArea)
+      console.log(exist)
+      if (!exist) {
         const nuevoDArea = new Direccion_area({ direccion_area: nuevaDArea });
         const result = await nuevoDArea.save({ session });
         if (!result) {
@@ -28,18 +30,20 @@ export const nuevaInformacion = async (req, res, next) => {
             .json({ desc: "Error al guardar la nueva dirección de área" });
         }
         req.body.direccion_area = nuevoDArea._id;
-      // } else {
-      //   await session.abortTransaction();
-      //   session.endSession();
-      //   return res
-      //     .status(409)
-      //     .json({ desc: "Esta dirección de área ya existe." });
-      // }
+      } else {
+        await session.abortTransaction();
+        session.endSession();
+        return res
+          .status(409)
+          .json({ desc: "Esta dirección de área ya existe." });
+      }
     }
 
     if (nuevaDGeneral) {
-      // const exist = verifyDireccionGeneralExists(nuevaDArea);
-      // if (!exist) {
+      const exist = await verifyDireccionGeneralExists(nuevaDGeneral);
+      console.log(nuevaDGeneral)
+      console.log(exist)
+      if (!exist) {
         const nuevoDGeneral = new Direccion_general({
           Direccion_General: nuevaDGeneral,
         });
@@ -52,13 +56,13 @@ export const nuevaInformacion = async (req, res, next) => {
             .json({ desc: "Error al guardar la nueva dirección general" });
         }
         req.body.Direccion_General = nuevoDGeneral._id;
-      // } else {
-      //   await session.abortTransaction();
-      //   session.endSession();
-      //   return res
-      //     .status(409)
-      //     .json({ desc: "Esta dirección general ya existe." });
-      // }
+      } else {
+        await session.abortTransaction();
+        session.endSession();
+        return res
+          .status(409)
+          .json({ desc: "Esta dirección general ya existe." });
+      }
     }
     return next();
   } catch (error) {
