@@ -23,6 +23,6 @@ export const verifyClientExists = async (req, res, next) => {
     console.log(error);
     return res
       .status(500)
-      .json({ desc: "Error interno en el servidor. Intente mas tarde" });
+      .json({ desc  : "Error interno en el servidor. Intente mas tarde" });
   }
 };
